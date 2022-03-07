@@ -60,6 +60,20 @@ class Game:
         self.play_button = Button(self.game_frame, text="Gain", padx=10, pady=10, command=self.reveal_boxes)
         self.play_button.grid(row=4)
 
+    def reveal_boxes(self):
+        # retrieve the balance from the initial function
+        current_balance = self.balance.get()
+
+        # adjust the balance (subtract game cost and add pay out)
+        # for testing purposes, just add 2
+        current_balance += 2
+
+        # set balance to adjusted balance
+        self.balance.set(current_balance)
+
+        # edit label so user can see their balance
+        self.balance_label.configure(text="Balance: {}".format(current_balance))
+
 
 # main routine
 if __name__ == "__main__":
