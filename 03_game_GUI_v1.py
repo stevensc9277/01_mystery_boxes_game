@@ -13,10 +13,11 @@ class Start:
         self.push_me_button = Button(text="Push Me", command=self.to_game)
         self.push_me_button.grid(row=0, pady=10)
 
-    def to_game(self, stakes):
+    def to_game(self):
 
         # retrieve starting balance
-        starting_balance = self.start_amount_entry.get()
+        starting_balance = 50
+        stakes = 1
                 
         Game(self, stakes, starting_balance)
 
