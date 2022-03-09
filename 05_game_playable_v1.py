@@ -48,7 +48,7 @@ class Game:
         self.heading_label.grid(row=0)
 
         # Mystery heading (row 1)
-        self.instructions_label = Label(self.start_frame, text="Press <enter> or click the 'Open Boxes' button to reveal the contents of the mystery boxes.", font="Arial 10", justify=LEFT, padx=10, pady=10, wrap=300)
+        self.instructions_label = Label(self.game_frame, text="Press <enter> or click the 'Open Boxes' button to reveal the contents of the mystery boxes.", font="Arial 10", justify=LEFT, padx=10, pady=10, wrap=300)
         self.instructions_label.grid(row=1)
 
         # boxes go here (row 2)
@@ -56,9 +56,9 @@ class Game:
         box_back = "#b9ea96"    # light green
         box_width = 5
         self.box_frame = Frame(self.game_frame)
-        self.box_frame(row=2, pady=10)
+        self.box_frame.grid(row=2, pady=10)
 
-        self.prize1_label = Label(self.box_frame, text="?\n",   font=box_text, bg=box_back, width=box_width, padx=10, pady=10)
+        self.prize1_label = Label(self.box_frame, text="?\n", font=box_text, bg=box_back, width=box_width, padx=10, pady=10)
         self.prize1_label.grid(row=0, column=0)
 
         self.prize2_label = Label(self.box_frame, text="?\n", font=box_text, bg=box_back, width=box_width, padx=10, pady=10)
@@ -83,7 +83,10 @@ class Game:
         self.help_export_frame.grid(row=5, pady=10)
 
         self.help_button = Button(self.help_export_frame, text="Help / Rules", font="Arial 15 bold", bg="#808080", fg="white")
-        self.help_button.grid(r)
+        self.help_button.grid(row=0, column=0, padx=2)
+
+        self.stats_button = Button(self.help_export_frame, text="Game Stats...", font="Arial 15 bold", bg="#003366", fg="white")
+        self.stats_button.grid(row=0, column=1, padx=2)
 
     def reveal_boxes(self):
         # retrieve the balance from the initial function
@@ -110,19 +113,29 @@ class Game:
                 prize = "copper\n(${})".format(1*stakes_multiplier)
                 round_winnings += 1 * stakes_multiplier
             
-            # else:
-            #     prize += "lead"
+            else:
+                prize = "lead\n($0)"
 
+            prizes.append(prize)
+
+        # display prizes...
+        self.prize1_label.config(text=prizes[0])
+        self.prize2_label.config(text=prizes[1])
+        self.prize3_label.config(text=prizes[2])
 
         # adjust the balance (subtract game cost and add pay out)
-        # for testing purposes, just add 2
-        current_balance += 2
+        current_balance -= 5 * stakes_multiplier
+
+        # add winnings
+        current_balance += round_winnings
 
         # set balance to adjusted balance
         self.balance.set(current_balance)
 
+        balance_statement = "Game Cost: ${}\nPayback: ${} \nCurrent Balance: ${}".format(5 * stakes_multiplier, round_winnings, current_balance)
+
         # edit label so user can see their balance
-        self.balance_label.configure(text="Balance: {}".format(current_balance))
+        self.balance_label.configure(text=balance_statement)
 
 
 
