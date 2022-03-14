@@ -149,7 +149,16 @@ class Game:
         # set balance to adjusted balance
         self.balance.set(current_balance)
 
-        balance_statement = "Game Cost: ${}\nPayback: ${} \nCurrent Balance: ${}".format(5 * stakes_multiplier, round_winnings, current_balance)
+        if current_balance < 5 * stakes_multiplier:
+            self.play_button.config(state=DISABLED)
+            self.game_box.focus()
+            self.play_button.config(text="Game Over")
+
+            balance_statement = "Current Balance: ${}\nYour balance is too low. You can only quit or view your stats. Sorry about that.".format(current_balance)
+            self.balance_label.config(fg="#660000", font="Arial 10 bold", text=balance_statement)
+         
+        else:
+            balance_statement = "Game Cost: ${}\nPayback: ${} \nCurrent Balance: ${}".format(5 * stakes_multiplier, round_winnings, current_balance)
 
         # edit label so user can see their balance
         self.balance_label.configure(text=balance_statement)
