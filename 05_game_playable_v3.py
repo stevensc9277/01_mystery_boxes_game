@@ -10,8 +10,8 @@ class Start:
         self.start_frame = Frame(parent)
         self.start_frame.grid()
 
-        self.push_button = Button(text="Push Me", command=self.to_game)
-        self.push_me_button.grid(row=0, pady=10)
+        self.push_button = Button(self.start_frame, text="Push Me", command=self.to_game)
+        self.push_button.grid(row=0, pady=10)
 
     def to_game(self):
 
@@ -169,6 +169,6 @@ class Game:
 # main routine
 if __name__ == "__main__":
     root = Tk()
-    root.title("title goes here")
+    root.title("Mystery boxes")
     something = Start(root)
     root.mainloop()
