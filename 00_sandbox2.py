@@ -32,8 +32,8 @@ class App(object):
             self._btn_matrix.append(row_matrix)
 
     def update(self, row, col):
-        self._btn_matrix[col][row].bind('<Enter>', on_enter)
-        self._btn_matrix[col][row].bind('<Leave>', on_leave)
+        self._btn_matrix[col][row].bind('<Enter>', lambda e: on_enter(e, self, [row], [col]))
+        self._btn_matrix[col][row].bind('<Leave>', lambda e: on_leave(e, self, [row], [col]))
 
 if __name__ == '__main__':
     root = Tk()
