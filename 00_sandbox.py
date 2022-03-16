@@ -5,12 +5,6 @@ LeftFrame = tk.Frame(root)
 LeftFrame.grid()
 
 #Define functions
-def on_enter(e):
-   current_button.config(background='snow4', foreground= "white")
-
-def on_leave(e):
-   current_button.config(background='SystemButtonFace', foreground= 'black')
-
 def checker(i,j):
     print("You pressed button {},{}".format(i, j))
 
@@ -29,7 +23,5 @@ for i in range(2):
         #Grid occurs on a new line
         current_button.grid(row = i+1, column = j+1, padx=10, pady=10)
         botones[i][j] = current_button
-current_button.bind('<Enter>', on_enter )
 
-current_button.bind('<Leave>', on_leave)
 root.mainloop()
