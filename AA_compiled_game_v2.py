@@ -69,6 +69,7 @@ class Start:
         root.withdraw()
 
     def check_funds(self):
+        starting_balance = IntVar()
         starting_balance = self.start_amount_entry.get()
 
         # set error background colours (and assume that there are no errors at the start)
@@ -171,16 +172,17 @@ class Game:
     def __init__(self, partner, stakes, starting_balance):
         print(stakes)
         print(starting_balance)
-
+        # convert from string to integer
+        starting_balance = int(starting_balance)
         # list for holding stats
         self.game_stats_list = [starting_balance, starting_balance]
         self.round_stats_list = []
-
+            
+      
         # initialise variables
         self.balance = IntVar()
         # set starting balance to amount entered by user at start of game
         self.balance.set(starting_balance)
-    
 
         # get value of stakes (use it as a multiplier when calculating winnings)
         self.multiplier = IntVar()
@@ -390,7 +392,7 @@ class GameStats:
         self.current_balance_value_label1 = Label(self.details_frame, font=content, text="${}".format(game_stats[1]), anchor="w")
         self.current_balance_value_label1.grid(row=1, column=1, padx=0)
 
-        if game_stats[1] > int(game_stats[0]):
+        if game_stats[1] > game_stats[0]:
             win_loss = "Amount Won:"
             amount = game_stats[1] - game_stats[0]
             win_loss_fg = "green"
@@ -415,7 +417,7 @@ class GameStats:
 
     def close_stats(self, partner):
         self.stats_box.destroy()
-        root.deiconify()
+        partner.game_box.deiconify()
         partner.stats_button.config(state=NORMAL)
 
 # main routine
