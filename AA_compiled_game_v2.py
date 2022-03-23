@@ -60,13 +60,13 @@ class Start:
         self.medium_stakes_button.config(state=DISABLED)
         self.high_stakes_button.config(state=DISABLED)
 
-        # instructions / help button
-        self.help_button = Button(self.start_frame, text="How to Play", bg="#808080", fg="white", font=button_font, command=self.to_help)
-        self.help_button.grid(row=5, pady=10)
+    #     # instructions / help button
+    #     self.help_button = Button(self.start_frame, text="How to Play", bg="#808080", fg="white", font=button_font, command=self.to_help)
+    #     self.help_button.grid(row=5, pady=10)
 
-    def to_help(self):
-        get_help = Help(self)
-        root.withdraw()
+    # def to_help(self):
+    #     get_help = Help(self)
+    #     root.withdraw()
 
     def check_funds(self):
         starting_balance = IntVar()
@@ -165,13 +165,10 @@ class Help:
     def close_help(self, partner):
         self.help_box.destroy()
         partner.help_button.config(state=NORMAL)
-        root.deiconify()
         
 
 class Game:
     def __init__(self, partner, stakes, starting_balance):
-        print(stakes)
-        print(starting_balance)
         # convert from string to integer
         starting_balance = int(starting_balance)
         # list for holding stats
@@ -244,7 +241,7 @@ class Game:
         self.help_export_frame = Frame(self.game_frame)
         self.help_export_frame.grid(row=5, pady=10)
 
-        self.help_button = Button(self.help_export_frame, text="Help / Rules", font="Arial 15 bold", bg="#808080", fg="white")
+        self.help_button = Button(self.help_export_frame, text="Help / Rules", font="Arial 15 bold", bg="#808080", fg="white", command=self.to_help)
         self.help_button.grid(row=0, column=0, padx=2)
 
         self.stats_button = Button(self.help_export_frame, text="Game Stats...", font="Arial 15 bold", bg="#003366", fg="white", command=lambda: self.to_stats(self.round_stats_list, self.game_stats_list))
@@ -253,6 +250,9 @@ class Game:
         # Quit button
         self.quit_button = Button(self.game_frame, text="Quit", fg="white", bg="#660000", font="arial 15 bold", width=20, command=self.to_quit, padx=10, pady=10)
         self.quit_button.grid(row=6, pady=10)
+    
+    def to_help(self):
+        get_help = Help(self)
 
     def reveal_boxes(self):
         # retrieve the balance from the initial function
@@ -270,24 +270,24 @@ class Game:
 
             if 0 < prize_num <= 5:
                 prize = PhotoImage(file="gold_low.gif")
-                prize_list = "gold\n(${})".format(5*stakes_multiplier)
+                prize_list = "gold(${})".format(5*stakes_multiplier)
                 round_winnings += 5 * stakes_multiplier
             
             elif 5 < prize_num <= 25:
                 prize = PhotoImage(file="silver_low.gif")
-                prize_list = "silver\n(${})".format(2*stakes_multiplier)
+                prize_list = "silver(${})".format(2*stakes_multiplier)
                 back_colour = "#B7B7B5"     # silver colour
                 round_winnings += 2 * stakes_multiplier
 
             elif 25 < prize_num <= 65:
                 prize = PhotoImage(file="copper_low.gif")  
-                prize_list = "copper\n(${})".format(1*stakes_multiplier)
+                prize_list = "copper(${})".format(1*stakes_multiplier)
                 back_colour = "#BC7F61"
                 round_winnings += 1 * stakes_multiplier
             
             else:
                 prize = PhotoImage(file="lead.gif")
-                prize_list = "lead\n($0)"
+                prize_list = "lead($0)"
                 back_colour = "#595E71"     # lead colour
 
             prizes.append(prize)
@@ -323,7 +323,6 @@ class Game:
         round_summary = "{} | {} | {} - Cost: ${} | Payback: ${} | Current Balance: ${}".format(stats_prizes[0], stats_prizes[1], stats_prizes[2], 5 * stakes_multiplier, round_winnings, current_balance)
 
         self.round_stats_list.append(round_summary)
-        print(self.round_stats_list)
         # edit label so user can their balance
         self.balance_label.configure(text=balance_statement)
 
@@ -350,7 +349,6 @@ class Game:
 
 class GameStats:
     def __init__(self, partner, game_history, game_stats):
-        print(game_history)
 
         # disable stats button
         partner.stats_button.config(state=DISABLED)
@@ -420,14 +418,14 @@ class GameStats:
         self.export_dismiss_frame.grid(row=5, pady=10)
 
         # export button
-        self.export_button = Button(self.export_dismiss_frame, text="Export...", font=heading, bg="#003366", fg="white", command=lambda: self.export(game_history))
+        self.export_button = Button(self.export_dismiss_frame, width=10, text="Export...", font=heading, bg="#003366", fg="white", command=lambda: self.export(game_history, game_stats))
         self.export_button.grid(row=0, column=0, padx=10)
 
         self.dismiss_button = Button(self.export_dismiss_frame, text="Dismiss", width=10, bg="#660000", font=heading, fg="white", command=partial(self.close_stats, partner))
         self.dismiss_button.grid(row=0, column=1)
 
-    def export(self, game_history):
-        get_export = Export(self, game_history)
+    def export(self, game_history, game_stats):
+        get_export = Export(self, game_history, game_stats)
         self.stats_box.withdraw()
 
     def close_stats(self, partner):
@@ -439,7 +437,6 @@ class Export:
     
     def __init__(self, partner, game_history, all_game_stats):
 
-    
         # disable export button
         partner.export_button.config(state=DISABLED)
 
@@ -479,7 +476,7 @@ class Export:
         self.save_cancel_frame.grid(row=5, pady=10)
 
         # save and cancel buttons (row 0 of save_cancel_frame)
-        self.save_button = Button(self.save_cancel_frame, fg="white", bg="#660000", text="Save", font="arial 12 bold", command=partial(lambda: self.save_history(partner, game_history)))
+        self.save_button = Button(self.save_cancel_frame, fg="white", bg="#660000", text="Save", font="arial 12 bold", command=partial(lambda: self.save_history(partner, game_history, all_game_stats)))
         self.save_button.grid(row=0, column=0)
 
         # cancel button
@@ -487,15 +484,15 @@ class Export:
         self.cancel_button.grid(row=0, column=1, padx=10)
 
     
-    def save_history(self, parent,game_history):
+    def save_history(self, parent,game_history, game_stats):
         
         # regular expression to check filename is valid
         valid_char = "[A-Za-z0-9]"
         has_error = "no"
 
         filename = self.filename_entry.get()
-        print(filename)
-
+        
+        # iterate through name to check for errors (spaces and blank names)
         for letter in filename:
             if re.match(valid_char, letter):
                 continue
@@ -541,9 +538,18 @@ class Export:
             f.write("Mystery Box Game Statistics \n\n")
             f.write("Made on: " + now.strftime('%A, %B %d, %Y') + "\n\n")
 
+            for round in game_stats:
+                if game_stats.index(round) == 0:
+                    f.write("Starting balance: ${}\n".format(round))
+                else:
+                    f.write("Current balance: ${}\n".format(round))
+
+            # heading for rounds
+            f.write("\nRound Details\n\n")
+
+            # add new line at end of each item
             for item in game_history:
                 f.write(item + "\n")
-
             # close file
             f.close()
             self.close_export(parent)
